@@ -1,0 +1,82 @@
+.comment {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.contentComment {
+  display: flex;
+  flex-direction: column;
+  
+  width: 100%;
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.mainComent{
+  background-color: var(--gray-700);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+
+.textComent{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.contentButtons{
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  padding: 0;
+  align-self: start;
+  
+
+
+  &:hover{
+    color: var(--green-500);
+
+    & .point{
+      background-color: var(--green-500);
+    }
+  } 
+}
+
+.point {
+  border-radius: 50%;
+  background-color: var(--gray-300);
+  width: .3rem;
+  height: .4rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  & button{
+    background-color: transparent;
+    border: transparent;
+    align-self: flex-start;
+
+    &:hover {
+      color: var(--red-danger);
+    }
+  }
+}
+
+.headerContent{ 
+  display: flex;
+  flex-direction: column;
+}
+
+.avatar {
+  height: 3rem;
+  width: 3rem;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--gray-600);
+  margin-bottom: 1rem;
+}

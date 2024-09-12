@@ -1,0 +1,22 @@
+.wrapper {
+  max-width: 70rem;
+  /* Coloca margin em cima e alinha o conteúdo ao centro */
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  display: grid;
+  grid-template-columns: 256px 1fr;
+
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  html{
+    /* diminui tudo que usou o rem */
+    font-size: 87.5%;
+  }
+  .wrapper{
+    grid-template-columns: 1fr;
+  }
+}
