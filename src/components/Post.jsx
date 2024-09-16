@@ -1,49 +1,80 @@
-import styles from "./Post.module.css"
+import styles from "./Post.module.css";
+import { format, formatDistanceToNow } from "date-fns";
+import ptPt from "date-fns/locale/pt";
 import { Comment } from "./Comment";
-import avatarPhoto from "../assets/avatar.png";
+import { useState } from "react";
 
-/* quando usar o module precisa dar o nome a importação e chamar como se fosse um objeto */
+export function Post({ author, publishedAt, content }) {
+  const [comments, setComments] = useState([1, 2]);
 
-export function Post() {
+  const publishedDateFormatted = format(
+    publishedAt,
+    "d 'de' LLLL 'às' HH:mm'h'",
+    {
+      locale: ptPt,
+    }
+  );
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: ptPt,
+    addSuffix: true,
+  });
+
+  function handleCreateNewComment(event) {
+    event.preventDefault();
+    // Imutabilidade - adiciona um novo comentário mantendo os anteriores
+    setComments((prevComments) => [...prevComments, prevComments.length + 1]);
+  }
+
   return (
-
     <article className={styles.post}>
       <header className={styles.header}>
         <div className={styles.userContent}>
-          <img src={avatarPhoto} className={styles.avatar}/>
+          <img src={author.avatarUrl} className={styles.avatar} alt="Avatar" />
           <div className={styles.nameContent}>
-            <strong>José Guerra</strong>
-            <span>CEO Afiado</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
-        </div>    
-        <time title="11 de maio de 2022 ás 08:13" dateTime="2022-05-11 08:13:30">Publicado há 1h</time>
+        </div>
+        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+          {publishedDateRelativeToNow}
+        </time>
       </header>
       <main>
-        <p>
-          Fala galeraa 👋
-          <br />
-          <br />
-          Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀
-        </p>
-        
-        <span></span>
+        {content.map((line, index) => {
+          if (line.type === "paragraph") {
+            return <p key={index}>{line.content}</p>;
+          } else if (line.type === "link") {
+            return (
+              <p key={index}>
+                <a href="#">{line.content}</a>
+              </p>
+            );
+          }
+          return null;
+        })}
       </main>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu feedback</strong>
 
-        <textarea placeHolder="Escreva um comentário..." className={styles.textArea}/>
+        <textarea
+          placeholder="Escreva um comentário..."
+          className={styles.textArea}
+        />
 
         <footer className={styles.footerButton}>
-          <button type="submit" className={styles.button}>Publicar</button>
+          <button type="submit" className={styles.button}>
+            Publicar
+          </button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
-        <Comment></Comment>
-        <Comment></Comment>
-        <Comment></Comment>
+        {comments.map((comment, index) => {
+          return <Comment key={index} />;
+        })}
       </div>
     </article>
-  )
+  );
 }
