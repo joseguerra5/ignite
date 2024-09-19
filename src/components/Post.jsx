@@ -1,11 +1,20 @@
 import styles from "./Post.module.css";
 import { format, formatDistanceToNow } from "date-fns";
 import ptPt from "date-fns/locale/pt";
-import { Comment } from "./Comment";
+import { Comment } from "./Comment.jsx";
 import { useState } from "react";
 
+
+
 export function Post({ author, publishedAt, content }) {
-  const [comments, setComments] = useState([1, 2]);
+  const [comments, setComments] = useState(["Post muito legal, hein"]);
+
+  const [newCommentText, setNewCommentText] = useState('')
+
+  function handleNewCommentChange() {
+    event.target.setCustomValidity("")
+    setNewCommentText(event.target.value)
+  }
 
   const publishedDateFormatted = format(
     publishedAt,
@@ -23,8 +32,25 @@ export function Post({ author, publishedAt, content }) {
   function handleCreateNewComment(event) {
     event.preventDefault();
     // Imutabilidade - adiciona um novo comentário mantendo os anteriores
-    setComments((prevComments) => [...prevComments, prevComments.length + 1]);
+    //o name do input é resgatado assim as info event.target.comment.value
+    
+
+    setComments((prevComments) => [...prevComments, newCommentText]);
+    setNewCommentText('')
   }
+
+  function deleteComment(commentToDelete) {
+    const commentsWithoutDeletedOne = comments.filter(comment => {
+      return comment !== commentToDelete
+    })
+    setComments(commentsWithoutDeletedOne)
+  }
+
+  function handleNewCommentInvalid() {
+    event.target.setCustomValidity("Esse campo é obrigatório")
+  }
+
+  const isNewCommentEmpty = newCommentText.length === 0
 
   return (
     <article className={styles.post}>
@@ -61,10 +87,15 @@ export function Post({ author, publishedAt, content }) {
         <textarea
           placeholder="Escreva um comentário..."
           className={styles.textArea}
+          name="comment"
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+          onInvalid={handleNewCommentInvalid}
+          required
         />
 
         <footer className={styles.footerButton}>
-          <button type="submit" className={styles.button}>
+          <button type="submit" className={styles.button} disabled={isNewCommentEmpty} >
             Publicar
           </button>
         </footer>
@@ -72,7 +103,13 @@ export function Post({ author, publishedAt, content }) {
 
       <div className={styles.commentList}>
         {comments.map((comment, index) => {
-          return <Comment key={index} />;
+          return (
+          <Comment 
+            key={index} 
+            content={comment} 
+            onDeleteComment={deleteComment} 
+            />
+          )
         })}
       </div>
     </article>
